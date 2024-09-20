@@ -6,4 +6,9 @@ def test_addition():
     assert addition(1,1)  == 2
 
 def test_subtraction():
+    '''Subtraction function'''
     assert subtraction(1,1) == 0
+
+def test_multiplication():
+    '''Multiplication function'''
+    assert test_multiplication(1,2) == 2
