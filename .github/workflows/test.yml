@@ -1,0 +1,51 @@
+name: Test, Lint, and Coverage Check
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test-lint-coverage:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v3
+
+    # Set up Python
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.x'  # Replace with the version you need
+
+    # Install dependencies
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pytest pytest-cov pylint
+
+    # Run Pytest with coverage
+    - name: Run tests with coverage
+      run: |
+        pytest --cov=my_project tests/  # Replace `my_project` with the directory where your code is
+
+    # Verify 100% coverage
+    - name: Check for 100% test coverage
+      run: |
+        coverage report --fail-under=100  # Fail if coverage is below 100%
+      continue-on-error: false
+
+    # Run Pylint
+    - name: Lint with Pylint
+      run: |
+        pylint my_project  # Replace `my_project` with the directory of your code
+      continue-on-error: false
+
+    # Upload coverage report as artifact (optional)
+    - name: Upload coverage report
+      uses: actions/upload-artifact@v3
+      with:
+        name: coverage-report
+        path: coverage.xml
